@@ -20,7 +20,7 @@ jobs:
       run: choco install ffmpeg -y
       
     - name: Compile
-      run: python -m nuitka --standalone --onefile preprocessor.py
+      run: python -m nuitka --standalone --onefile --assume-yes-for-downloads preprocessor.py
       
     - name: Upload
       uses: actions/upload-artifact@v4
