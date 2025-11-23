@@ -5,7 +5,7 @@ from pydub import AudioSegment
 import io
 import tempfile
 import os
-#import onnxruntime as ort
+import onnxruntime as ort
 
 def is_audio_file(content_type: str, filename: str, file_content: bytes) -> bool:
     """Проверяет, является ли файл аудио"""
