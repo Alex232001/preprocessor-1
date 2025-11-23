@@ -1,41 +1,29 @@
-name: Simple Build
+name: Build
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest, ubuntu-latest]
-        
+    runs-on: windows-latest
+    
     steps:
     - uses: actions/checkout@v4
     
-    - name: Setup Python
-      uses: actions/setup-python@v4
+    - uses: actions/setup-python@v4
       with:
         python-version: '3.9'
         
-    - name: Install dependencies
-      run: |
-        pip install numpy librosa pydub onnxruntime soundfile nuitka
-        if [ "$RUNNER_OS" == "Windows" ]; then
-          choco install ffmpeg -y
-        else
-          sudo apt-get update && sudo apt-get install -y ffmpeg libsndfile1
-        fi
-        
+    - name: Install packages
+      run: pip install numpy librosa pydub onnxruntime soundfile nuitka
+      
+    - name: Install FFmpeg  
+      run: choco install ffmpeg -y
+      
     - name: Compile
-      run: |
-        if [ "$RUNNER_OS" == "Windows" ]; then
-          python -m nuitka --standalone --onefile --output-dir=dist audio_processor.py
-        else
-          python -m nuitka --standalone --onefile --output-dir=dist audio_processor.py
-        fi
-        
-    - name: Upload Artifact
+      run: python -m nuitka --standalone --onefile audio_processor.py
+      
+    - name: Upload
       uses: actions/upload-artifact@v4
       with:
-        name: audio-processor-${{ matrix.os }}
-        path: dist/
+        name: app
+        path: audio_processor.exe
